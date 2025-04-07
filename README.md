@@ -24,6 +24,8 @@ Esta implementación complementa perfectamente mis aprendizajes previos, ya que 
 
 Mi objetivo con esta adaptación ha sido crear un flujo completo de datos que integre las tecnologías estudiadas en ambos cursos, demostrando cómo el procesamiento con Spark puede manejar volúmenes de datos realistas en un entorno cloud empresarial como Google Cloud Platform.
 
+
+
 Lo primero ha sido iniciar por la creación de un proyecto en google cloud que me permita resolver los ejercicios
 Para ello he creado el proyecto big-data-processing y he investigado que necesito validar que los siguientes APIS estén disponibles:
 Dataproc API (no instalado, y lo he instalado y habilidado)
@@ -58,6 +60,13 @@ Una vez configurada la instancia ya puedo utilizar JupyterLab
 
 Pruebo si spark esta funcionando:
 <img width="1566" alt="image" src="https://github.com/user-attachments/assets/30ce7fdc-67c3-4ff4-85a5-2e56e368d579" />
+
+Para obtener un set de datos, voy a utilizar la información pública del banco mundial y hacer una exportación a un bucket que me servirá para realizar los ejercicios solicitados:
+<img width="1916" alt="image" src="https://github.com/user-attachments/assets/d6d8b81b-5a68-41e2-824e-e0fac60b6e0f" />
+
+El último ejercicio me pide unos datos de ventas, como es un .csv lo voy a subir al bucket que tengo dispuesto para poder disponibilizar estos datos:
+<img width="1916" alt="image" src="https://github.com/user-attachments/assets/7a5e645a-3a7a-4c55-a637-c5bb3853157e" />
+
 
 Ya tengo disponible el notebook para trabajar los ejercicios de la asignación:
 
