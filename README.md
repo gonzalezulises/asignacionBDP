@@ -1,7 +1,5 @@
 # Asignación Big Data Processing Ulises González
 
-# Implementación de Procesamiento de Big Data con Apache Spark
-
 ## Introducción y Contexto Personal
 
 Durante el curso anterior de Big Data Architecture, me fascinó particularmente el estudio de la integración entre Hadoop y Elasticsearch como parte de una solución completa para el procesamiento y análisis de grandes volúmenes de datos. Me pareció especialmente interesante la práctica donde conectábamos estos sistemas a través de configuraciones específicas, utilizando Hive para consultar datos en Hadoop y visualizándolos con Kibana.
