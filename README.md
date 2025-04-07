@@ -1,4 +1,28 @@
-# asignacionBDP
+# Asignación Big Data Processing Ulises González
+
+# Implementación de Procesamiento de Big Data con Apache Spark
+
+## Introducción y Contexto Personal
+
+Durante el curso anterior de Big Data Architecture, me fascinó particularmente el estudio de la integración entre Hadoop y Elasticsearch como parte de una solución completa para el procesamiento y análisis de grandes volúmenes de datos. Me pareció especialmente interesante la práctica donde conectábamos estos sistemas a través de configuraciones específicas, utilizando Hive para consultar datos en Hadoop y visualizándolos con Kibana.
+
+Inspirado por estos conocimientos, quise adaptar el ejercicio actual para profundizar más en el ecosistema de Google Cloud y poner en práctica lo aprendido en la materia anterior. En mi adaptación, decidí utilizar un volumen de datos significativamente mayor al requerido en los ejemplos básicos, específicamente datos educativos del Banco Mundial alojados en Google Cloud Storage, para hacer la experiencia más cercana a un escenario real de Big Data.
+
+## Mi Enfoque para la Práctica Actual
+
+En esta práctica con Spark y Scala, aproveché los conceptos fundamentales sobre arquitecturas de Big Data que adquirí previamente. Aunque Scala y Spark son requisitos de la materia actual, la elección de trabajar con conjuntos de datos voluminosos y reales fue mi decisión para enriquecer la experiencia de aprendizaje.
+
+A través de los 5 ejercicios propuestos, he explorado tanto las APIs de alto nivel (DataFrame) como las de bajo nivel (RDD) que ofrece Spark, implementando:
+
+1. Operaciones básicas de manipulación de DataFrames
+2. Funciones personalizadas (UDFs) para extender la funcionalidad de Spark
+3. Joins y agregaciones para combinar y analizar diferentes fuentes de datos
+4. Procesamiento con RDDs para operaciones más específicas
+5. Integración con fuentes externas mediante la carga y transformación de archivos CSV
+
+Esta implementación complementa perfectamente mis aprendizajes previos, ya que representa la capa de procesamiento que alimentaría los sistemas de almacenamiento y visualización estudiados en Big Data Architecture. Los resultados de este procesamiento podrían indexarse directamente en Elasticsearch utilizando las configuraciones que aprendí anteriormente.
+
+Mi objetivo con esta adaptación ha sido crear un flujo completo de datos que integre las tecnologías estudiadas en ambos cursos, demostrando cómo el procesamiento con Spark puede manejar volúmenes de datos realistas en un entorno cloud empresarial como Google Cloud Platform.
 
 Lo primero ha sido iniciar por la creación de un proyecto en google cloud que me permita resolver los ejercicios
 Para ello he creado el proyecto big-data-processing y he investigado que necesito validar que los siguientes APIS estén disponibles:
@@ -35,6 +59,9 @@ Una vez configurada la instancia ya puedo utilizar JupyterLab
 Pruebo si spark esta funcionando:
 <img width="1566" alt="image" src="https://github.com/user-attachments/assets/30ce7fdc-67c3-4ff4-85a5-2e56e368d579" />
 
+Ya tengo disponible el notebook para trabajar los ejercicios de la asignación:
+
+<img width="1916" alt="image" src="https://github.com/user-attachments/assets/93033d09-668b-4c15-9e6d-9ab4e91a4e53" />
 
 
 
