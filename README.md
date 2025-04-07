@@ -24,7 +24,9 @@ Esta implementación complementa perfectamente mis aprendizajes previos, ya que 
 
 Mi objetivo con esta adaptación ha sido crear un flujo completo de datos que integre las tecnologías estudiadas en ambos cursos, demostrando cómo el procesamiento con Spark puede manejar volúmenes de datos realistas en un entorno cloud empresarial como Google Cloud Platform.
 
+El notebook completo lo puedes encontrar aca: [ver el notebook directamente en GitHub](https://github.com/gonzalezulises/asignacionBDP/blob/main/Asignacion-Ulises-Gonzalez.ipynb).
 
+El desarrollo paso a paso a continuación:
 
 Lo primero ha sido iniciar por la creación de un proyecto en google cloud que me permita resolver los ejercicios
 Para ello he creado el proyecto big-data-processing y he investigado que necesito validar que los siguientes APIS estén disponibles:
@@ -71,6 +73,32 @@ El último ejercicio me pide unos datos de ventas, como es un .csv lo voy a subi
 Ya tengo disponible el notebook para trabajar los ejercicios de la asignación:
 
 <img width="1916" alt="image" src="https://github.com/user-attachments/assets/93033d09-668b-4c15-9e6d-9ab4e91a4e53" />
+
+A continuación capturas con los ejercicios:
+
+Ejercicio 1:
+
+<img width="1916" alt="image" src="https://github.com/user-attachments/assets/763224b5-3665-4282-b646-051dd25d07b5" />
+
+<img width="1916" alt="image" src="https://github.com/user-attachments/assets/8fcf8bd8-a418-450d-bb6a-dd4b5841c229" />
+
+
+Ejercicio 2:
+
+<img width="1916" alt="image" src="https://github.com/user-attachments/assets/1af4f6aa-0fad-409a-bffc-7653992276da" />
+
+Ejercicio 3: 
+
+<img width="1916" alt="image" src="https://github.com/user-attachments/assets/b1156b1d-36ca-4902-8139-903a6ae7543b" />
+
+Ejercicio 4:
+
+<img width="1916" alt="image" src="https://github.com/user-attachments/assets/2f1bc61f-b88b-4968-bde9-b8294b479b78" />
+
+Ejercicio 5: 
+
+<img width="1916" alt="image" src="https://github.com/user-attachments/assets/262b4ba4-315a-460a-86c2-821a4c1e6f74" />
+<img width="1916" alt="image" src="https://github.com/user-attachments/assets/0720782a-cbd0-44b4-b198-3f8f38b3c6d1" />
 
 
 
