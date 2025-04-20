@@ -1,3 +1,18 @@
+/**
+ * Suite de pruebas para las funciones de análisis de Big Data
+ * 
+ * Este archivo contiene pruebas unitarias que verifican el correcto funcionamiento
+ * de cada una de las funciones definidas en el objeto ExamenFunctions. Las pruebas:
+ * 
+ * - Crean conjuntos de datos de ejemplo basados en datos educativos y de ventas
+ * - Aplican las funciones a estos datos
+ * - Comparan los resultados obtenidos con los resultados esperados calculados manualmente
+ * - Verifican tanto la funcionalidad con datos sintéticos como con datos reales (CSV)
+ * 
+ * Cada test está diseñado para validar un aspecto específico del procesamiento
+ * de datos con Spark, asegurando la correcta implementación de los ejercicios.
+ */
+
 package com.bdp.examen
 
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
