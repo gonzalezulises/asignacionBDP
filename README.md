@@ -6,24 +6,11 @@ Resumen de los Cambios Realizados
 Hemos transformado un notebook Jupyter (.ipynb) en una estructura de proyecto Scala/SBT estandarizada para cumplir con los requisitos académicos del curso de Big Data Processing. El proceso implicó:
 
 Creación de la estructura de directorios estándar SBT:
-asignacionBDP/
-├── build.sbt
-├── src/
-│   ├── main/
-│   │   └── scala/
-│   │       └── com/
-│   │           └── bdp/
-│   │               └── examen/
-│   │                   └── examen.scala
-│   └── test/
-│       ├── resources/
-│       │   └── ventas.csv
-│       └── scala/
-│           └── com/
-│               └── bdp/
-│                   └── examen/
-│                       ├── examenTest.scala
-│                       └── TestInit.scala
+
+<img width="757" alt="image" src="https://github.com/user-attachments/assets/3d9433b9-8182-44fa-8582-e3b306d5a598" />
+
+
+
 
 Extracción y refactorización del código:
 
