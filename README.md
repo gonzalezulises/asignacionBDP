@@ -3,34 +3,31 @@
 actualización 20 de abril
 
 Resumen de los Cambios Realizados
-Hemos transformado un notebook Jupyter (.ipynb) en una estructura de proyecto Scala/SBT estandarizada para cumplir con los requisitos académicos del curso de Big Data Processing. El proceso implicó:
+He transformado un notebook Jupyter (.ipynb) en una estructura de proyecto Scala/SBT estandarizada para cumplir con los requisitos académicos del curso de Big Data Processing. El proceso implicó:
 
 Creación de la estructura de directorios estándar SBT:
 
 <img width="757" alt="image" src="https://github.com/user-attachments/assets/3d9433b9-8182-44fa-8582-e3b306d5a598" />
 
-
-
-
 Extracción y refactorización del código:
 
-Convertimos las celdas de código del notebook en funciones modulares dentro de un objeto Scala
-Estructuramos las funciones por tipo de ejercicio (DataFrames, UDFs, joins, RDDs, análisis de ventas)
-Añadimos documentación detallada para explicar la funcionalidad de cada componente
+Convertí las celdas de código del notebook en funciones modulares dentro de un objeto Scala
+Estructuré las funciones por tipo de ejercicio (DataFrames, UDFs, joins, RDDs, análisis de ventas)
+Añadí documentación detallada para explicar la funcionalidad de cada componente
 
 
 Creación de tests unitarios:
 
-Implementamos pruebas para cada una de las funciones
-Definimos datos de prueba representativos de los conjuntos originales
-Incluimos validaciones que comparan los resultados con valores esperados calculados manualmente
+Implementé pruebas para cada una de las funciones
+Definí datos de prueba representativos de los conjuntos originales
+Incluí validaciones que comparan los resultados con valores esperados calculados manualmente
 
 
 Configuración del entorno:
 
-Creamos un archivo build.sbt con las dependencias necesarias
-Configuramos una sesión de Spark específica para pruebas en TestInit.scala
-Incluimos un conjunto de datos CSV para las pruebas relacionadas con ventas
+Creé un archivo build.sbt con las dependencias necesarias
+Configuré una sesión de Spark específica para pruebas en TestInit.scala
+Incluí un conjunto de datos CSV para las pruebas relacionadas con ventas
 
 
 
@@ -42,8 +39,6 @@ Funciones definidas por usuario (UDFs): Clasificación de valores según umbrale
 Joins y agregaciones: Combinación de datos y cálculo de promedios por país
 Procesamiento con RDDs: Conteo de ocurrencias de indicadores educativos
 Análisis de ventas: Cálculo de ingresos y estadísticas de productos
-
-Cada ejercicio demuestra capacidades clave de Apache Spark para el procesamiento de grandes volúmenes de datos, aplicadas a un conjunto de datos educativos del Banco Mundial y a un dataset de ventas.
 
 
 
