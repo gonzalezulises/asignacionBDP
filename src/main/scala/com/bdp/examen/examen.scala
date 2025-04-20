@@ -1,3 +1,19 @@
+/**
+ * Ejercicios de Big Data Processing con Apache Spark
+ * 
+ * Este archivo contiene las funciones principales para el análisis de datos educativos
+ * del Banco Mundial y datos de ventas, implementando los conceptos clave de Spark:
+ * 
+ * - Operaciones básicas con DataFrames (filtrado, selección, ordenamiento)
+ * - Funciones definidas por el usuario (UDFs) para transformaciones personalizadas
+ * - Joins y agregaciones para combinar y resumir datos
+ * - Uso de RDDs para operaciones de bajo nivel
+ * - Procesamiento y análisis de datos de ventas
+ * 
+ * Cada función representa un ejercicio específico que demuestra diferentes
+ * capacidades del framework de Spark para el procesamiento de Big Data.
+ */
+
 package com.bdp.examen
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
