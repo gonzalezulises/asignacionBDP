@@ -1,178 +1,102 @@
-/**
- * Suite de pruebas para las funciones de análisis de Big Data
- * 
- * Este archivo contiene pruebas unitarias que verifican el correcto funcionamiento
- * de cada una de las funciones definidas en el objeto ExamenFunctions. Las pruebas:
- * 
- * - Crean conjuntos de datos de ejemplo basados en datos educativos y de ventas
- * - Aplican las funciones a estos datos
- * - Comparan los resultados obtenidos con los resultados esperados calculados manualmente
- * - Verifican tanto la funcionalidad con datos sintéticos como con datos reales (CSV)
- * 
- * Cada test está diseñado para validar un aspecto específico del procesamiento
- * de datos con Spark, asegurando la correcta implementación de los ejercicios.
- */
-
 package com.bdp.examen
 
-import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types._
-import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.BeforeAndAfterAll
+import org.apache.spark.sql.DataFrame
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
-class ExamenTest extends AnyFunSuite with BeforeAndAfterAll {
-  
-  val spark: SparkSession = TestInit.spark
+class examenTest extends FlatSpec with Matchers with BeforeAndAfterAll with TestInit {
   import spark.implicits._
-  
-  val worldBankData = Seq(
-    ("Chad", "TCD", "Enrolment in lower secondary education, all programmes, both sexes (number)", "UIS.E.2", 321921.0, 2012L),
-    ("Chad", "TCD", "Enrolment in upper secondary education, all programmes, both sexes (number)", "UIS.E.3", 68809.0, 2006L),
-    ("Chad", "TCD", "Enrolment in upper secondary education, all programmes, both sexes (number)", "UIS.E.3", 30551.0, 1999L),
-    ("Chad", "TCD", "Enrolment in upper secondary education, all programmes, both sexes (number)", "UIS.E.3", 79784.0, 2007L),
-    ("Chad", "TCD", "Repeaters in primary education, all grades, both sexes (number)", "UIS.R.1", 282699.0, 2006L),
-    ("Chad", "TCD", "School enrollment, primary (% gross)", "SE.PRM.ENRR", 82.61, 2010L)
-  )
-  
-  val worldBankSchema = StructType(Array(
-    StructField("country_name", StringType, true),
-    StructField("country_code", StringType, true),
-    StructField("indicator_name", StringType, true),
-    StructField("indicator_code", StringType, true),
-    StructField("value", DoubleType, true),
-    StructField("year", LongType, true)
-  ))
-  
-  val worldBankDF: DataFrame = spark.createDataFrame(
-    spark.sparkContext.parallelize(worldBankData.map(Row.fromTuple)),
-    worldBankSchema
-  )
-  
-  val ventasData = Seq(
-    (1, 101, 5, 20.0),
-    (2, 102, 3, 15.0),
-    (3, 101, 2, 20.0),
-    (4, 103, 7, 10.0),
-    (5, 102, 4, 15.0)
-  )
-  
-  val ventasSchema = StructType(Array(
-    StructField("id_venta", IntegerType, true),
-    StructField("id_producto", IntegerType, true),
-    StructField("cantidad", IntegerType, true),
-    StructField("precio_unitario", DoubleType, true)
-  ))
-  
-  val ventasDF: DataFrame = spark.createDataFrame(
-    spark.sparkContext.parallelize(ventasData.map(Row.fromTuple)),
-    ventasSchema
-  )
-  
-  val ventasCSVDF: DataFrame = spark.read
-    .option("header", "true")
-    .option("inferSchema", "true")
-    .csv("src/test/resources/ventas.csv")
-  
 
-  test("Test mostrarEsquema") {
-    ExamenFunctions.mostrarEsquema(worldBankDF)
-    assert(true)
+  override def afterAll(): Unit = {
+    stopSpark()
   }
-  
 
-  test("Test filtrarPorValor") {
-    val resultDF = ExamenFunctions.filtrarPorValor(worldBankDF, 80.0)
-    val expectedCount = worldBankData.count(_._5 > 80.0)
+  "Ejercicio 1" should "seleccionar los nombres de los estudiantes y ordenarlos por calificación de forma descendente" in {
+    val estudiantes = Seq(
+      ("Ana", 23, 9.0),
+      ("Luis", 21, 7.5),
+      ("Pedro", 22, 8.5),
+      ("Maria", 20, 9.5)
+    ).toDF("nombre", "edad", "calificacion")
     
-    assert(resultDF.count() == expectedCount)
-    assert(resultDF.filter(col("value") <= 80.0).count() == 0)
+    val resultado = examen.ejercicio1(estudiantes)
+    
+    val nombres = resultado.collect().map(_.getString(0))
+    nombres shouldBe Array("Maria", "Ana", "Pedro", "Luis")
   }
-  
 
-  test("Test ordenarPorValor") {
-    val resultDF = ExamenFunctions.ordenarPorValor(worldBankDF)
-    val maxValue = worldBankDF.select(max("value")).first().getDouble(0)
-    val topRow = resultDF.first()
+  "Ejercicio 2" should "aplicar una UDF para determinar si un número es par o impar" in {
+    val numeros = Seq(
+      (1),
+      (2),
+      (3),
+      (4),
+      (5)
+    ).toDF("numero")
     
-    assert(topRow.getDouble(2) == maxValue)
+    val resultado = examen.ejercicio2(numeros)
+    
+    val paridades = resultado.select("paridad").collect().map(_.getString(0))
+    paridades shouldBe Array("Impar", "Par", "Impar", "Par", "Impar")
   }
-  
 
-  test("Test crearEvaluadorValor") {
-    val evaluador = ExamenFunctions.crearEvaluadorValor(50000.0)
-    val resultDF = evaluador(worldBankDF)
+  "Ejercicio 3" should "realizar un join entre estudiantes y calificaciones y calcular el promedio por estudiante" in {
+    val estudiantes = Seq(
+      (1, "Ana"),
+      (2, "Luis"),
+      (3, "Pedro")
+    ).toDF("id", "nombre")
     
-    val altoCount = resultDF.filter(col("nivel_valor") === "Alto").count()
-    val bajoCount = resultDF.filter(col("nivel_valor") === "Bajo").count()
-    val expectedAltoCount = worldBankData.count(_._5 > 50000.0)
-    val expectedBajoCount = worldBankData.count(_._5 <= 50000.0)
+    val calificaciones = Seq(
+      (1, "Matemáticas", 9.0),
+      (1, "Física", 8.5),
+      (2, "Matemáticas", 7.0),
+      (2, "Física", 8.0),
+      (3, "Matemáticas", 8.5),
+      (3, "Física", 9.0)
+    ).toDF("id_estudiante", "asignatura", "calificacion")
     
-    assert(altoCount == expectedAltoCount)
-    assert(bajoCount == expectedBajoCount)
+    val resultado = examen.ejercicio3(estudiantes, calificaciones)
+    
+    val promedios = resultado.select("id", "promedio_calificaciones").collect().map(row => 
+      (row.getInt(0), row.getDouble(1))
+    )
+    
+    promedios.length shouldBe 3
+    promedios(0)._2 shouldBe 8.75 +- 0.01
+    promedios(1)._2 shouldBe 7.5 +- 0.01
+    promedios(2)._2 shouldBe 8.75 +- 0.01
   }
-  
 
-  test("Test promedioIndicadoresPorPais") {
-    val resultDF = ExamenFunctions.promedioIndicadoresPorPais(worldBankDF)
-
-    assert(resultDF.count() == 1)
+  "Ejercicio 4" should "contar la cantidad de ocurrencias de cada palabra" in {
+    val palabras = List("hola", "mundo", "hola", "spark", "scala", "spark", "big", "data", "hola")
     
-    val row = resultDF.first()
-    val expectedPromedio = worldBankData.map(_._5).sum / worldBankData.length
+    val resultado = examen.ejercicio4(palabras)(spark)
     
-
-    assert(Math.abs(row.getDouble(2) - expectedPromedio) < 0.001)
+    val resultadoArray = resultado.collect()
+    
+    resultadoArray(0) shouldBe ("hola", 3)
+    resultadoArray(1) shouldBe ("spark", 2)
   }
-  
 
-  test("Test contarOcurrenciasIndicadores") {
-    val resultDF = ExamenFunctions.contarOcurrenciasIndicadores(worldBankDF)
+  "Ejercicio 5" should "calcular el ingreso total por producto" in {
+    val ventas = Seq(
+      (1, 101, 5, 20.0),
+      (2, 102, 3, 15.0),
+      (3, 101, 2, 20.0),
+      (4, 103, 7, 10.0),
+      (5, 102, 4, 15.0)
+    ).toDF("id_venta", "id_producto", "cantidad", "precio_unitario")
     
-
-    val uisE3Count = resultDF.filter(col("indicator_name") === "Enrolment in upper secondary education, all programmes, both sexes (number)").first().getInt(1)
-    assert(uisE3Count == 3) // Debería haber 3 ocurrencias
-  }
+    val resultado = examen.ejercicio5(ventas)
   
-
-  test("Test calcularIngresoVentas") {
-    val resultDF = ExamenFunctions.calcularIngresoVentas(ventasDF)
+    val ingresos = resultado.collect().map(row => (row.getInt(0), row.getDouble(1)))
     
-  
-    val firstRowIngreso = resultDF.first().getDouble(4) // La columna ingreso_total está en la posición 4
-    val expectedIngreso = ventasData(0)._3 * ventasData(0)._4 // cantidad * precio_unitario
+    val ingresoProducto101 = ingresos.find(_._1 == 101).map(_._2).getOrElse(0.0)
+    val ingresoProducto102 = ingresos.find(_._1 == 102).map(_._2).getOrElse(0.0)
+    val ingresoProducto103 = ingresos.find(_._1 == 103).map(_._2).getOrElse(0.0)
     
-    assert(firstRowIngreso == expectedIngreso)
-  }
-  
-
-  test("Test agregarIngresosPorProducto") {
-    val resultDF = ExamenFunctions.agregarIngresosPorProducto(ventasDF)
-   
-    val distinctProductCount = ventasData.map(_._2).distinct.length
-    assert(resultDF.count() == distinctProductCount)
-    
- 
-    val producto101Row = resultDF.filter(col("id_producto") === 101).first()
-    val expectedIngreso101 = ventasData.filter(_._2 == 101).map(t => t._3 * t._4).sum
-    
-    assert(producto101Row.getDouble(1) == expectedIngreso101)
-  }
-  
-
-  test("Test agregarIngresosPorProducto con CSV") {
-    if (ventasCSVDF != null) {
-      val resultDF = ExamenFunctions.agregarIngresosPorProducto(ventasCSVDF)
-      
- 
-      assert(resultDF.count() > 0)
-      
-      val ingresos = resultDF.select("ingreso_total").collect().map(_.getDouble(0))
-      assert(ingresos.zip(ingresos.tail).forall { case (a, b) => a >= b })
-    }
-  }
-  
-  override protected def afterAll(): Unit = {
-    spark.stop()
+    ingresoProducto101 shouldBe 140.0 +- 0.01
+    ingresoProducto102 shouldBe 105.0 +- 0.01
+    ingresoProducto103 shouldBe 70.0 +- 0.01
   }
 }
