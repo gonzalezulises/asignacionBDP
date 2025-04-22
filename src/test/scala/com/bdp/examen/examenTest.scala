@@ -78,25 +78,28 @@ class examenTest extends FlatSpec with Matchers with BeforeAndAfterAll with Test
     resultadoArray(1) shouldBe ("spark", 2)
   }
 
-  "Ejercicio 5" should "calcular el ingreso total por producto" in {
-    val ventas = Seq(
-      (1, 101, 5, 20.0),
-      (2, 102, 3, 15.0),
-      (3, 101, 2, 20.0),
-      (4, 103, 7, 10.0),
-      (5, 102, 4, 15.0)
-    ).toDF("id_venta", "id_producto", "cantidad", "precio_unitario")
-    
-    val resultado = examen.ejercicio5(ventas)
+ "Ejercicio 5" should "calcular el ingreso total por producto" in {
+  val ventas = Seq(
+    (1, 101, 5, 20.0),
+    (2, 102, 3, 15.0),
+    (3, 101, 2, 20.0),
+    (4, 103, 7, 10.0),
+    (5, 102, 4, 15.0)
+  ).toDF("id_venta", "id_producto", "cantidad", "precio_unitario")
   
-    val ingresos = resultado.collect().map(row => (row.getInt(0), row.getDouble(1)))
-    
-    val ingresoProducto101 = ingresos.find(_._1 == 101).map(_._2).getOrElse(0.0)
-    val ingresoProducto102 = ingresos.find(_._1 == 102).map(_._2).getOrElse(0.0)
-    val ingresoProducto103 = ingresos.find(_._1 == 103).map(_._2).getOrElse(0.0)
-    
-    ingresoProducto101 shouldBe 140.0 +- 0.01
-    ingresoProducto102 shouldBe 105.0 +- 0.01
-    ingresoProducto103 shouldBe 70.0 +- 0.01
-  }
+  val resultado = examen.ejercicio5(ventas).orderBy("id_producto")
+
+  resultado.count() shouldBe 3
+
+  val filas = resultado.collect()
+  
+  filas(0).getInt(0) shouldBe 101
+  filas(0).getDouble(1) shouldBe 140.0 +- 0.01
+  
+  filas(1).getInt(0) shouldBe 102
+  filas(1).getDouble(1) shouldBe 105.0 +- 0.01
+  
+  filas(2).getInt(0) shouldBe 103
+  filas(2).getDouble(1) shouldBe 70.0 +- 0.01
+ }
 }
