@@ -17,10 +17,7 @@ object examen {
    *          Selecciona los nombres de los estudiantes y ordénalos por calificación de forma descendente.
    */
   def ejercicio1(estudiantes: DataFrame): DataFrame = {
-    // Mostramos el esquema (aunque no retornamos nada de esta operación)
     estudiantes.printSchema()
-    
-    // Seleccionamos los nombres y ordenamos por calificación descendente
     estudiantes
       .select("nombre")
       .orderBy(desc("calificacion"))
