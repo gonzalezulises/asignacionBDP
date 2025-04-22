@@ -1,98 +1,97 @@
-/**
- * Ejercicios de Big Data Processing con Apache Spark
- * 
- * Este archivo contiene las funciones principales para el análisis de datos educativos
- * del Banco Mundial y datos de ventas, implementando los conceptos clave de Spark:
- * 
- * - Operaciones básicas con DataFrames (filtrado, selección, ordenamiento)
- * - Funciones definidas por el usuario (UDFs) para transformaciones personalizadas
- * - Joins y agregaciones para combinar y resumir datos
- * - Uso de RDDs para operaciones de bajo nivel
- * - Procesamiento y análisis de datos de ventas
- * 
- * Cada función representa un ejercicio específico que demuestra diferentes
- * capacidades del framework de Spark para el procesamiento de Big Data.
- */
-
 package com.bdp.examen
 
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
-import org.apache.spark.rdd.RDD
 
-object ExamenFunctions {
-  
-  def mostrarEsquema(df: DataFrame): Unit = {
-    println("Esquema del DataFrame:")
-    df.printSchema()
+object examen {
+
+  /**
+   * Ejercicio 1: Crear un DataFrame y realizar operaciones básicas
+   * 
+   * Pregunta: Crea un DataFrame a partir de una secuencia de tuplas que contenga información sobre
+   *           estudiantes (nombre, edad, calificación).
+   *         Realiza las siguientes operaciones:
+   *          Muestra el esquema del DataFrame.
+   *          Filtra los estudiantes con una calificación mayor a 8.
+   *          Selecciona los nombres de los estudiantes y ordénalos por calificación de forma descendente.
+   */
+  def ejercicio1(estudiantes: DataFrame): DataFrame = {
+    // Mostramos el esquema (aunque no retornamos nada de esta operación)
+    estudiantes.printSchema()
+    
+    // Seleccionamos los nombres y ordenamos por calificación descendente
+    estudiantes
+      .select("nombre")
+      .orderBy(desc("calificacion"))
   }
-  
-  def filtrarPorValor(df: DataFrame, umbral: Double): DataFrame = {
-    df.filter(col("value") > umbral)
+
+  /**
+   * Ejercicio 2: UDF (User Defined Function)
+   * 
+   * Pregunta: Define una función que determine si un número es par o impar.
+   *           Aplica esta función a una columna de un DataFrame que contenga una lista de números.
+   */
+  def ejercicio2(numeros: DataFrame): DataFrame = {
+    val parImparUDF = udf((numero: Int) => {
+      if (numero % 2 == 0) "Par" else "Impar"
+    })
+    
+    numeros.withColumn("paridad", parImparUDF(col("numero")))
   }
-  
-  def ordenarPorValor(df: DataFrame): DataFrame = {
-    df.select("country_name", "indicator_name", "value", "year")
-      .orderBy(desc("value"))
-  }
-  
-  def crearEvaluadorValor(umbral: Double): DataFrame => DataFrame = {
-    df => {
-      val evaluateValueUDF = udf((value: Double) => {
-        if (value > umbral) "Alto" else "Bajo"
-      })
-      df.withColumn("nivel_valor", evaluateValueUDF(col("value")))
-    }
-  }
-  
-  def promedioIndicadoresPorPais(df: DataFrame): DataFrame = {
-    val countriesDF = df
-      .select("country_name", "country_code")
-      .distinct()
-      
-    val indicatorsDF = df
-      .select("country_code", "indicator_name", "value", "year")
-      .filter(col("value").isNotNull)
-      
-    val joinedDF = countriesDF.join(indicatorsDF, Seq("country_code"), "inner")
+
+  /**
+   * Ejercicio 3: Joins y agregaciones
+   * 
+   * Pregunta: Dado dos DataFrames,
+   *           uno con información de estudiantes (id, nombre)
+   *           y otro con calificaciones (id_estudiante, asignatura, calificacion),
+   *           realiza un join entre ellos y calcula el promedio de calificaciones por estudiante.
+   */
+  def ejercicio3(estudiantes: DataFrame, calificaciones: DataFrame): DataFrame = {
+    val joinedDF = estudiantes.join(
+      calificaciones,
+      estudiantes("id") === calificaciones("id_estudiante"),
+      "inner"
+    )
     
     joinedDF
-      .groupBy("country_name", "country_code")
+      .groupBy("id", "nombre")
       .agg(
-        avg("value").alias("promedio_indicadores"),
-        count("indicator_name").alias("total_indicadores")
+        avg("calificacion").alias("promedio_calificaciones")
       )
-      .orderBy(desc("promedio_indicadores"))
+      .orderBy("id")
   }
-  
-  def contarOcurrenciasIndicadores(df: DataFrame): DataFrame = {
-    val indicatorsRDD = df
-      .select("indicator_name")
-      .rdd
-      .map(row => row.getString(0))
-      
-    val indicatorCountsRDD = indicatorsRDD
-      .map(indicator => (indicator, 1))
+
+  /**
+   * Ejercicio 4: Uso de RDDs
+   * 
+   * Pregunta: Crea un RDD a partir de una lista de palabras y 
+   *           cuenta la cantidad de ocurrencias de cada palabra.
+   */
+  def ejercicio4(palabras: List[String])(spark: SparkSession): RDD[(String, Int)] = {
+    val palabrasRDD = spark.sparkContext.parallelize(palabras)
+    
+    palabrasRDD
+      .map(palabra => (palabra, 1))
       .reduceByKey(_ + _)
       .sortBy(_._2, ascending = false)
-      
-    indicatorCountsRDD.toDF("indicator_name", "count")
   }
-  
-  def calcularIngresoVentas(ventasDF: DataFrame): DataFrame = {
-    ventasDF.withColumn("ingreso_total", col("cantidad") * col("precio_unitario"))
-  }
-  
-  def agregarIngresosPorProducto(ventasDF: DataFrame): DataFrame = {
-    val ventasConIngresoDF = calcularIngresoVentas(ventasDF)
-    
-    ventasConIngresoDF
+
+  /**
+   * Ejercicio 5: Procesamiento de archivos
+   * 
+   * Pregunta: Carga un archivo CSV que contenga información sobre
+   *           ventas (id_venta, id_producto, cantidad, precio_unitario)
+   *           y calcula el ingreso total (cantidad * precio_unitario) por producto.
+   */
+  def ejercicio5(ventas: DataFrame): DataFrame = {
+    ventas
+      .withColumn("ingreso", col("cantidad") * col("precio_unitario"))
       .groupBy("id_producto")
       .agg(
-        sum("ingreso_total").alias("ingreso_total"),
-        sum("cantidad").alias("cantidad_total"),
-        avg("precio_unitario").alias("precio_promedio"),
-        count("id_venta").alias("num_ventas")
+        sum("ingreso").alias("ingreso_total"),
+        sum("cantidad").alias("cantidad_total")
       )
       .orderBy(desc("ingreso_total"))
   }
