@@ -3,12 +3,13 @@ ThisBuild / scalaVersion := "2.12.15"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "Big-Data-Processing"
+    name := "examen-spark-scala"
   )
 
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.8" % Test,
   "org.apache.spark" %% "spark-core" % "3.2.4",
   "org.apache.spark" %% "spark-sql" % "3.2.4",
-  "org.apache.spark" %% "spark-hive" % "3.4.0"
+  "org.apache.spark" %% "spark-hive" % "3.2.4",
+  "commons-io" % "commons-io" % "2.6"
 )
